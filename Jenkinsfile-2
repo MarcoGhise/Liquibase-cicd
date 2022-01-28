@@ -1,0 +1,9 @@
+node {
+	withCredentials([usernamePassword(credentialsId: 'liquibase-mysql', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+		/* Requires the Docker Pipeline plugin to be installed */
+		docker.image('liquibase/liquibase-mysql').inside('-v /mnt/c/Users/git/liquibase-cicd/config/changelog:/liquibase/changelog -v /mnt/c/Users/git/liquibase-cicd/scripts:/liquibase/scripts --network liquibase-cicd_cicd-net') { 
+			sh 'liquibase update --classpath=/liquibase/changelog --url="jdbc:mysql://mysql:3306/cicd" --username=$USERNAME --password=$PASSWORD --changeLogFile=dropcolumn.xml'
+		}
+	}
+
+}

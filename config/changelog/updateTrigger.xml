@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet  author="liquibase-docs" id="vers2">
+	<addColumn tableName="User">
+	  <column name="Firstname" type="VARCHAR(50)" />
+	  <column name="Surname" type="VARCHAR(50)" />
+	</addColumn>
+	      
+	<sql endDelimiter="/">
+	  CREATE DEFINER=`cicd_user`@`%` TRIGGER UserReplica BEFORE INSERT ON `User` 
+      FOR EACH ROW
+	  SET NEW.Firstname = SUBSTRING_INDEX(SUBSTRING_INDEX(NEW.Name, ' ', 1), ' ', -1), 
+	  NEW.Surname = SUBSTRING_INDEX(SUBSTRING_INDEX(NEW.Name, ' ', 2), ' ', -1)
+	</sql>
+	
+	 <rollback>
+       <dropColumn tableName="User" columnName="Firstname" /> 
+       <dropColumn tableName="User" columnName="Surname" />
+       <sql endDelimiter="/">
+	  DROP TRIGGER cicd.UserReplica;
+	</sql>  
+	 </rollback>
+	  
+  </changeSet> 
+</databaseChangeLog>

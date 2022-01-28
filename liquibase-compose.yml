@@ -1,0 +1,15 @@
+version: "3"
+services:
+  liquibase:
+    image: liquibase/liquibase-mysql
+#    image: jenkins/jenkins-liquibase
+    container_name: 'liquibase'
+    volumes:
+    - ./config/changelog:/liquibase/changelog
+    - ./scripts:/liquibase/scripts
+#    command: generateChangeLog --url=jdbc:mysql://mysql:3306/cicd?user=cicd_user&password=cicd_password --defaultSchemaName=cicd --changeLogFile=/liquibase/output/changelog.xml
+    command: update --url=jdbc:mysql://mysql:3306/cicd?user=cicd_user&password=cicd_password --changeLogFile=update.xml
+    networks:
+    - cicd-net
+networks:
+  cicd-net:     

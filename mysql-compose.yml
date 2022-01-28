@@ -1,0 +1,28 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: 'mysql'
+    environment:
+      MYSQL_DATABASE: 'cicd'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'cicd_user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'cicd_password'
+      MYSQL_ROOT_PASSWORD: 'cicd_password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+    - '3306:3306'
+    expose:
+    # Opens port 3306 on the container
+    - '3306'
+    # Where our data will be persisted
+    volumes:
+    - mysql-data:/var/lib/mysql
+    networks:
+    - cicd-net    
+  # Names our volume
+volumes:
+  mysql-data:  
+networks:
+  cicd-net:  
